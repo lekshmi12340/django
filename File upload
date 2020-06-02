@@ -1,0 +1,76 @@
+settings.py
+
+STATIC_URL = '/static/'
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'Media')
+MEDIA_URL='/media/'
+
+
+forms.py
+
+class employeeForm(forms.Form):
+    name = forms.CharField(label='Name', required=True)
+    age = forms.CharField(label='Age', widget=forms.NumberInput)
+    empid = forms.CharField(label='ID', widget=forms.NumberInput)
+    address = forms.CharField(widget=forms.Textarea())
+    upload_file = forms.FileField()
+
+admin.py
+
+admin.site.register(employeeData)
+
+models.py
+
+class employeeData(models.Model):
+    name=models.CharField(max_length=20)
+    age=models.IntegerField()
+    address=models.TextField()
+    empid=models.IntegerField()
+    upload_file = models.FileField(upload_to="documents")
+    class Meta:
+        verbose_name_plural='Employee details'
+    def __str__(self):
+        return self.name
+
+employee.html   
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{form}}
+    </table>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+</body>
+</html>
+
+views.py
+def employee(request):
+    if request.method == 'POST':
+        form = employeeForm(request.POST,request.FILES)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            address = form.cleaned_data['address']
+            empid = form.cleaned_data['empid']
+            upload_file= form.cleaned_data['upload_file']
+            emp=employeeData()
+            emp.name=name
+            emp.age = age
+            emp.address = address
+            emp.empid = empid
+            emp.upload_file=upload_file
+            emp.save()
+            return HttpResponse('data is saved to database')
+    else:
+
+        form=employeeForm()
+    return render(request,'myNewapp/employee.html',{'form':form})
