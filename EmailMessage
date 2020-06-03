@@ -1,0 +1,57 @@
+settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'xyz@gmail.com'
+EMAIL_HOST_PASSWORD = "putyourpassword"
+EMAIL_USE_TLS = True
+
+views.py
+
+def MailSending(request):
+    if request.method=='POST':
+        form=MailSendingForm(request.POST,request.FILES)
+        if form.is_valid():
+            subject=form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            from_mail = form.cleaned_data['from_mail']
+            to_mail= form.cleaned_data['to_mail']
+            attachement = form.cleaned_data['attachement']
+            email=EmailMessage(subject,message,from_mail,[to_mail])
+            email.attach(attachement.name,attachement.read(),attachement.content_type)
+            email.send()
+            return HttpResponse('Email send successfully !!!....')
+    else:
+            form=MailSendingForm()
+    return render(request,'mynewapp/mailsend.html',{'form':form})
+    
+  forms.py
+  
+  class MailSendingForm(forms.Form):
+    subject=forms.CharField()
+    message = forms.CharField()
+    from_mail = forms.CharField()
+    to_mail = forms.CharField()
+    attachement = forms.FileField()
+
+mailsend.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Mail sending with attachement</h1>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table border="2px solid blue">
+        {{form}}
+
+    </table>
+    <button type="submit">submit</button>
+</form>
+
+</body>
+</html>
