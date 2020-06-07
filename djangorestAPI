@@ -1,0 +1,53 @@
+views.py
+
+class Liststudent(generics.ListCreateAPIView):
+    queryset=student.objects.all()
+    serializer_class=serializers.studentSerializer
+class Detailstudent(generics.RetrieveUpdateDestroyAPIView):
+    queryset = student.objects.all()
+    serializer_class = serializers.studentSerializer
+    
+    admin.py
+    
+    admin.site.register(student)
+    
+    app urls
+    
+    path('api/',views.Liststudent.as_view()),
+    path('<int:pk>/',views.Detailstudent.as_view())
+    
+    serializers.py
+    
+    from rest_framework import serializers
+from . import models
+class studentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields=('id','name','address')
+        model=models.student
+        
+models.py
+
+from django.db import models
+class student(models.Model):
+    name=models.CharField(max_length=20)
+    age=models.IntegerField()
+    address=models.TextField()
+    gender=models.CharField(max_length=20,default='NA')
+    class Meta:
+        verbose_name_plural='student details'
+    def __str__(self):
+        return self.name
+   
+settings of app 
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myNewapp',
+    'rest_framework'
+]
