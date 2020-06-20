@@ -1,0 +1,30 @@
+home.html
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Home html</title>
+    <link rel="stylesheet" href="{% static 'CSS/style.css'%}">
+</head>
+<body>
+<h1>{{course1}}</h1>
+<img src="{% static 'IMAGES/download.jpg'%}">
+
+</body>
+</html>
+
+
+views
+def home1(request):
+    course='python'
+    return render(request,'newapp/home.html',{'course1':course})
+    
+urls
+rom django.urls import path
+from . import views
+urlpatterns=[
+    path('home1',views.home1),
+
+]
