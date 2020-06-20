@@ -1,0 +1,41 @@
+models.py
+
+from django.db import models
+class student(models.Model):
+    name=models.CharField(max_length=20)
+    age=models.IntegerField()
+    address=models.TextField()
+    class Meta:
+        verbose_name_plural="student details"
+        def __str__(self):
+            return self.name
+            
+admin.py-register this model in admin.py
+
+views.py
+def studentdata(request):
+    students=student.objects.all()
+    return render(request,'newapp/student.html',{'students':students})
+    
+    html
+    
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for student in students %}
+<h1>{{student.name}}</h1>
+<h2>
+    {{student.age}}
+</h2>
+<h5>
+    {{student.address}}
+
+</h5>
+{% endfor %}
+
+</body>
+</html>
