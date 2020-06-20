@@ -1,0 +1,16 @@
+views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+def home(request):
+    return HttpResponse('Hi Everyone')
+# Create your views here.
+
+urls.py
+
+from django.urls import path
+from . import views
+urlpatterns=[
+    path('home',views.home)
+]
+
